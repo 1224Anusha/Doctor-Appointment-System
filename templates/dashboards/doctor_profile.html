@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Profile | MediConnect{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 700px; margin-top: 2rem;">
+    <div class="glass-card">
+        <div class="auth-header" style="text-align: left; margin-bottom: 2rem;">
+            <h1>Update Professional Profile</h1>
+            <p>Set your specialization and availability to help patients find you.</p>
+        </div>
+
+        <form method="post" action="{% url 'doctor_profile_update' %}">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="specialization">Specialization</label>
+                    <input type="text" name="specialization" id="specialization" class="form-control" value="{{ profile.specialization }}" required placeholder="e.g., Neurologist, General Physician">
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="hospital_name">Clinic / Hospital Name</label>
+                    <input type="text" name="hospital_name" id="hospital_name" class="form-control" value="{{ profile.hospital_name|default:'' }}" placeholder="e.g., City General Hospital">
+                </div>
+
+                <div class="form-group">
+                    <label for="available_days">Available Days</label>
+                    <input type="text" name="available_days" id="available_days" class="form-control" value="{{ profile.available_days|default:'' }}" placeholder="e.g., Mon - Fri">
+                </div>
+
+                <div class="form-group">
+                    <label for="available_time">Available Hours</label>
+                    <input type="text" name="available_time" id="available_time" class="form-control" value="{{ profile.available_time|default:'' }}" placeholder="e.g., 09:00 AM - 05:00 PM">
+                </div>
+
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="bio">Professional Bio</label>
+                    <textarea name="bio" id="bio" class="form-control" style="min-height: 120px;" placeholder="Tell patients about your experience and qualifications...">{{ profile.bio|default:'' }}</textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <a href="{% url 'doctor_dashboard' %}" class="btn btn-outline" style="flex: 1;">Cancel</a>
+                <button type="submit" class="btn btn-primary" style="flex: 2;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Profile
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

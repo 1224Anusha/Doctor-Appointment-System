@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}System Appointments | Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Appointment Monitor</h1>
+        <p style="color: var(--text-secondary);">View and manage all system appointments</p>
+    </div>
+    <div>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline">Back to Dashboard</a>
+    </div>
+
+<!-- Admin Navigation Menu -->
+<div class="glass-card" style="margin-bottom: 2rem; padding: 1rem; display: flex; gap: 1rem; overflow-x: auto;">
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline" style="border: none;">Overview</a>
+    <a href="{% url 'admin_manage_patients' %}" class="btn btn-outline" style="border: none;"><i class="fa-solid fa-users"></i> Patients</a>
+    <a href="{% url 'admin_manage_doctors' %}" class="btn btn-outline" style="border: none;"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+    <a href="{% url 'admin_manage_appointments' %}" class="btn btn-outline" style="border: none; background: rgba(255,255,255,0.05);"><i class="fa-regular fa-calendar-check"></i> Appointments</a>
+    <a href="{% url 'admin_reports' %}" class="btn btn-outline" style="border: none;"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+</div>
+</div>
+
+<div class="glass-card">
+    <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 1.25rem;">All Appointments ({{ appointments.count }})</h2>
+        <a href="{% url 'admin_reports' %}" class="btn btn-primary" style="font-size: 0.9rem; padding: 0.5rem 1rem;"><i class="fa-solid fa-download"></i> Export CSV</a>
+    </div>
+
+    {% if appointments %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--surface-border); color: var(--text-secondary);">
+                        <th style="padding: 1rem 0.5rem; font-weight: 500;">ID</th>
+                        <th style="padding: 1rem 0.5rem; font-weight: 500;">Patient</th>
+                        <th style="padding: 1rem 0.5rem; font-weight: 500;">Doctor</th>
+                        <th style="padding: 1rem 0.5rem; font-weight: 500;">Schedule</th>
+                        <th style="padding: 1rem 0.5rem; font-weight: 500;">Status</th>
+                        <th style="padding: 1rem 0.5rem; font-weight: 500; text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in appointments %}
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1rem 0.5rem; color: var(--text-secondary);">#{{ apt.id }}</td>
+                        <td style="padding: 1rem 0.5rem; font-weight: 500;">
+                            {{ apt.patient.get_full_name|default:apt.patient.username }}<br>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ apt.patient.phone_number|default:"-" }}</span>
+                        </td>
+                        <td style="padding: 1rem 0.5rem;">
+                            Dr. {{ apt.doctor.user.get_full_name|default:apt.doctor.user.username }}<br>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ apt.doctor.specialization }}</span>
+                        </td>
+                        <td style="padding: 1rem 0.5rem; font-size: 0.95rem;">
+                            {{ apt.date|date:"M d, Y" }} <br>
+                            <span style="color: var(--text-secondary);">{{ apt.time|time:"H:i A" }}</span>
+                        </td>
+                        <td style="padding: 1rem 0.5rem;">
+                            {% if apt.status == 'pending' %}
+                                <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Pending</span>
+                            {% elif apt.status == 'confirmed' %}
+                                <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Confirmed</span>
+                            {% elif apt.status == 'completed' %}
+                                <span style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Completed</span>
+                            {% else %}
+                                <span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 1rem 0.5rem; text-align: right;">
+                            <form method="POST" onsubmit="return confirm('Are you sure you want to permanently delete appointment #{{ apt.id }} from the database?');" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="appointment_id" value="{{ apt.id }}">
+                                <button type="submit" class="btn btn-outline" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3); padding: 0.4rem 0.8rem; font-size: 0.85rem;" title="Delete Record">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem 0; color: var(--text-secondary);">
+            <i class="fa-regular fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p>No appointments exist in the system.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Doctor | Admin Portal{% endblock %}
+
+{% block content %}
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Edit Doctor: {{ user_form.instance.get_full_name|default:user_form.instance.username }}</h2>
+        <p style="color: var(--text-secondary);">Update professional profile and account access</p>
+    </div>
+    <a href="{% url 'admin_manage_doctors' %}" class="btn btn-outline" style="padding: 0.8rem 1.5rem;">
+        <i class="fa-solid fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="glass-card form-container" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <form method="post">
+        {% csrf_token %}
+        
+        <h3 style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Account Details</h3>
+        
+        {% for field in user_form %}
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error-text" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem;">
+                        {{ field.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <h3 style="margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Professional Profile</h3>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="specialization">Specialization</label>
+            <input type="text" name="specialization" id="specialization" value="{{ profile.specialization }}" placeholder="e.g. Cardiologist">
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="hospital_name">Hospital/Clinic Name</label>
+            <input type="text" name="hospital_name" id="hospital_name" value="{{ profile.hospital_name }}" placeholder="e.g. City General App">
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="available_days">Available Days</label>
+                <input type="text" name="available_days" id="available_days" value="{{ profile.available_days }}" placeholder="e.g. Mon-Fri">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="available_time">Available Hours</label>
+                <input type="text" name="available_time" id="available_time" value="{{ profile.available_time }}" placeholder="e.g. 09:00 AM - 05:00 PM">
+            </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="bio">Professional Bio</label>
+            <textarea name="bio" id="bio" rows="4" placeholder="Brief background about the doctor...">{{ profile.bio }}</textarea>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fa-solid fa-save"></i> Save Changes</button>
+            <a href="{% url 'admin_manage_doctors' %}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

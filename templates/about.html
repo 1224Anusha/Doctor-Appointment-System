@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us | MediConnect{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; background: var(--bg-surface); padding: 3rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+    <h1 style="color: var(--primary-color); margin-bottom: 20px; text-align: center;">About MediConnect</h1>
+    
+    <div style="color: var(--text-secondary); line-height: 1.8; font-size: 1.1rem;">
+        <p style="margin-bottom: 20px;">
+            MediConnect is a comprehensive Doctor Appointment Scheduling System designed to bridge the gap between healthcare professionals and patients. Our mission is to make healthcare more accessible, efficient, and user-friendly.
+        </p>
+        
+        <h3 style="color: var(--text-color); margin-top: 30px; margin-bottom: 15px;">For Patients</h3>
+        <p style="margin-bottom: 20px;">
+            We empower patients to take control of their health by providing a simple platform to search for doctors by specialty, view their availability in real-time, and book appointments without the hassle of long waiting times or phone calls.
+        </p>
+        
+        <h3 style="color: var(--text-color); margin-top: 30px; margin-bottom: 15px;">For Doctors</h3>
+        <p style="margin-bottom: 20px;">
+            Healthcare providers can easily manage their schedules, view upcoming appointments, and communicate status updates with their patients directly through their dedicated dashboard.
+        </p>
+        
+        <h3 style="color: var(--text-color); margin-top: 30px; margin-bottom: 15px;">Our Vision</h3>
+        <p>
+            To become the most trusted healthcare connectivity platform, ensuring that everyone receives the right care at the right time. We believe that technology can significantly improve the healthcare experience for both providers and patients.
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'home' %}" class="btn btn-outline">Return Home</a>
+    </div>
+</div>
+{% endblock %}

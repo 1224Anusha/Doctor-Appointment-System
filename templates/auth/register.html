@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | MediConnect{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 600px;">
+    <div class="glass-card">
+        <div class="auth-header">
+            <h1>Create Account</h1>
+            <p>Join MediConnect as a Patient or Doctor</p>
+        </div>
+
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                {% for field in form %}
+                    <div class="form-group" {% if field.name == 'username' or field.name == 'email' or field.name == 'role' %}style="grid-column: span 2;"{% endif %}>
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <span class="helptext">{{ field.help_text }}</span>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="helptext" style="color: var(--danger)">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                        <script>
+                            document.getElementById('{{ field.id_for_label }}').classList.add('form-control');
+                        </script>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full mt-4">
+                <i class="fa-solid fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}">Log in here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

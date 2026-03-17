@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Find a Doctor | MediConnect{% endblock %}
+
+{% block content %}
+<div class="dashboard-header" style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Find a Doctor</h1>
+    <p style="color: var(--text-secondary);">Search by name or specialization</p>
+</div>
+
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <form method="get" action="{% url 'doctor_search' %}" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+            <label for="q">Doctor Name</label>
+            <input type="text" name="q" id="q" class="form-control" value="{{ request.GET.q }}" placeholder="e.g., John Doe">
+        </div>
+        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+            <label for="specialty">Specialization</label>
+            <input type="text" name="specialty" id="specialty" class="form-control" value="{{ request.GET.specialty }}" placeholder="e.g., Cardiologist">
+        </div>
+        <button type="submit" class="btn btn-primary" style="height: 48px;">
+            <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+    </form>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+    {% for doctor in doctors %}
+        <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 60px; height: 60px; background: rgba(79, 70, 229, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--primary-color);">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.25rem;">Dr. {{ doctor.user.get_full_name }}</h3>
+                        <p style="color: var(--primary-color); font-weight: 500; font-size: 0.9rem;">{{ doctor.specialization }}</p>
+                    </div>
+                </div>
+                
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    {% if doctor.hospital_name %}
+                        <p style="margin-bottom: 0.5rem;"><i class="fa-regular fa-hospital" style="width: 20px;"></i> {{ doctor.hospital_name }}</p>
+                    {% endif %}
+                    {% if doctor.available_days %}
+                        <p style="margin-bottom: 0.5rem;"><i class="fa-regular fa-calendar-days" style="width: 20px;"></i> {{ doctor.available_days }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <a href="{% url 'book_appointment' doctor.id %}" class="btn btn-outline w-full">
+                Book Appointment
+            </a>
+        </div>
+    {% empty %}
+        <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">No doctors found matching your criteria.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

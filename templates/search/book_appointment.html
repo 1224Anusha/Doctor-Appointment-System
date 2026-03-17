@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment | MediConnect{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 600px;">
+    <div class="glass-card">
+        <div class="auth-header" style="text-align: left; display: flex; align-items: center; gap: 1.5rem;">
+            <div style="width: 80px; height: 80px; background: rgba(79, 70, 229, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary-color);">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div>
+                <h1 style="font-size: 1.8rem; margin-bottom: 0.25rem;">Book Appointment</h1>
+                <p style="color: var(--text-secondary); font-size: 1.1rem;">with Dr. {{ doctor.user.get_full_name }}</p>
+                <p style="color: var(--primary-color); font-weight: 500; font-size: 0.9rem; margin-top: 0.25rem;">{{ doctor.specialization }}</p>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--surface-border); margin: 2rem 0;">
+
+        {% if doctor.available_days or doctor.available_time %}
+            <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                <strong>Doctor's Availability:</strong><br>
+                {{ doctor.available_days|default:"Days not specified" }} | {{ doctor.available_time|default:"Time not specified" }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'book_appointment' doctor.id %}">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                        <div class="helptext" style="color: var(--danger)">{{ form.date.errors|striptags }}</div>
+                    {% endif %}
+                    <script>document.getElementById('{{ form.date.id_for_label }}').classList.add('form-control');</script>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.time.id_for_label }}">{{ form.time.label }}</label>
+                    {{ form.time }}
+                    {% if form.time.errors %}
+                        <div class="helptext" style="color: var(--danger)">{{ form.time.errors|striptags }}</div>
+                    {% endif %}
+                    <script>document.getElementById('{{ form.time.id_for_label }}').classList.add('form-control');</script>
+                </div>
+                
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }} <span style="color: var(--text-secondary);font-size: 0.8rem;">(Optional)</span></label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}
+                        <div class="helptext" style="color: var(--danger)">{{ form.notes.errors|striptags }}</div>
+                    {% endif %}
+                    <script>
+                        var notesInput = document.getElementById('{{ form.notes.id_for_label }}');
+                        notesInput.classList.add('form-control');
+                        notesInput.style.minHeight = '100px';
+                    </script>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <a href="{% url 'doctor_search' %}" class="btn btn-outline" style="flex: 1;">Cancel</a>
+                <button type="submit" class="btn btn-primary" style="flex: 2;">
+                    <i class="fa-solid fa-calendar-check"></i> Request Appointment
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

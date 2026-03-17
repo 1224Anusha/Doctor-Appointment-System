@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home | MediConnect{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; margin-top: 50px; background: var(--bg-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden;">
+    <div style="flex: 1 1 500px; padding: 3rem;">
+        <h1 style="color: var(--primary-color); font-size: 2.5rem; margin-bottom: 20px;">Welcome to MediConnect</h1>
+        <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 30px; line-height: 1.6;">
+            Your trusted platform for scheduling and managing doctor appointments seamlessly. 
+            Connect with top specialists and prioritize your health.
+        </p>
+        
+        <div style="display: flex; gap: 20px;">
+            {% if request.user.is_authenticated %}
+                {% if request.user.role == 'patient' %}
+                    <a href="{% url 'doctor_search' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">
+                        <i class="fa-solid fa-calendar-plus"></i> Request Appointment
+                    </a>
+                    <a href="{% url 'patient_dashboard' %}" class="btn btn-outline" style="font-size: 1.1rem; padding: 12px 24px;">Go to Dashboard</a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">Go to Dashboard</a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline" style="font-size: 1.1rem; padding: 12px 24px;">Login to Account</a>
+                <a href="{% url 'register' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">Registration</a>
+            {% endif %}
+        </div>
+    </div>
+    <div style="flex: 1 1 400px; max-width: 500px; padding: 2rem;">
+        <img src="{% static 'images/hero.png' %}" alt="Doctor Appointment Hero" style="width: 100%; height: auto; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px;">
+    <div style="background: var(--bg-surface); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); text-align: center;">
+        <i class="fa-solid fa-user-doctor" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+        <h3 style="margin-bottom: 10px;">Expert Doctors</h3>
+        <p style="color: var(--text-secondary);">Access a wide network of highly qualified and experienced healthcare professionals.</p>
+    </div>
+    <div style="background: var(--bg-surface); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); text-align: center;">
+        <i class="fa-solid fa-calendar-check" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+        <h3 style="margin-bottom: 10px;">Easy Scheduling</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">Book, reschedule, or cancel appointments effortlessly at your convenience.</p>
+        {% if request.user.is_authenticated and request.user.role == 'patient' %}
+            <a href="{% url 'doctor_search' %}" style="color: var(--primary-color); font-weight: 500; text-decoration: none;">Book Now <i class="fa-solid fa-arrow-right"></i></a>
+        {% endif %}
+    </div>
+    <div style="background: var(--bg-surface); padding: 2rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); text-align: center;">
+        <i class="fa-solid fa-bell" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+        <h3 style="margin-bottom: 10px;">Instant Notifications</h3>
+        <p style="color: var(--text-secondary);">Get real-time updates and reminders about your upcoming appointments.</p>
+    </div>
+</div>
+
+<div style="margin-top: 60px; background: var(--bg-surface); padding: 3rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+    <h2 style="color: var(--primary-color); margin-bottom: 20px; text-align: center;">About Our Appointment System</h2>
+    <div style="color: var(--text-secondary); line-height: 1.8; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+        <p style="margin-bottom: 15px;">
+            Welcome to the MediConnect Doctor Appointment System. Our platform is designed to provide a seamless healthcare experience by bridging the gap between doctors and patients. Whether you are seeking a routine check-up, specialized treatment, or expert medical advice, MediConnect makes it easy to find the right healthcare professional.
+        </p>
+        <p style="margin-bottom: 15px;">
+            <strong>For Patients:</strong> You can effortlessly browse through our directory of qualified doctors, view their specialties, check their availability, and book an appointment that fits your schedule. Our system ensures you receive instant notifications and reminders so you never miss a visit.
+        </p>
+        <p>
+            <strong>For Doctors:</strong> Healthcare providers can manage their daily schedules, track patient appointments, and streamline their workflow all from an intuitive dashboard. MediConnect empowers clinics and hospitals to deliver better care through organized and efficient appointment management.
+        </p>
+    </div>
+</div>
+{% endblock %}

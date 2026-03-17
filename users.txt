@@ -1,0 +1,9 @@
+admin | True | admin
+patient1 | False | patient
+kirankumar | False | patient
+ram | False | doctor
+kiran | False | patient
+PallapuAnusha | False | patient
+somarashmitha@2005 | False | doctor
+shivareddy@12 | False | patient
+Ryakamravali@12 | False | doctor
